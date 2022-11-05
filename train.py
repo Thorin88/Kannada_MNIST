@@ -18,6 +18,8 @@ from models.ConvNetLarge import ConvNetLarge
 
 from helpers import load_data, get_device, cuda, toTensor, toNumpy, plotResults, count_correct
 
+from init_helper import get_arguments, get_model_class
+
 from CustomDataset import CustomDataset
 
 # Trains the provided model class using the data provided
@@ -179,17 +181,20 @@ def train(model_class,model_init_params,Xtr,Ytr,valSplitSize=0.2,batch_size=32,n
 
 def main():
 
-    # TODO - Params for this
-    # TODO - Remove X Y limits
+    args = get_arguments("train")
 
-    data_dir = "./data/"
+    data_dir = args.data_dir
 
     X, Y = load_data(data_dir + "train.csv")
 
-    # BasicCNN
-    trained_model = train(ConvNet,{},X[:1000],Y[:1000],verbose=1,num_epochs=10, batch_size=128, lr=1e-3, valSplitSize=0.2)
-    # LargeCNN
-    # trained_model = train(ConvNetLarge,{},X,Y,verbose=1,num_epochs=15, batch_size=256, lr=1e-3, valSplitSize=0.2)
+    trained_model = train(get_model_class(args.model),
+                          args.model_parameters,
+                          X[:1000],Y[:1000],
+                          verbose=args.verbose,
+                          num_epochs=args.max_epoch,
+                          batch_size=args.batch_size,
+                          lr=args.lr,
+                          valSplitSize=args.val_split_size)
 
 if __name__ == '__main__':
     main()

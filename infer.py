@@ -16,6 +16,8 @@ from models.ConvNetLarge import ConvNetLarge
 
 from helpers import load_data, get_device, cuda, toTensor, toNumpy, plotResults, count_correct
 
+from init_helper import get_arguments, get_model_class
+
 from CustomDataset import CustomDataset
 
 # Using the trained model provided, loads in raw data from the filepath provided
@@ -58,17 +60,26 @@ def infer_raw(filename, model):
 
     return pd.DataFrame( np.concatenate( (ids, predicted_labels), axis=1 ), columns = ["id","label"] )
 
+def get_model_class(model_type):
+
+    MODELS = {
+        'basic': ConvNet,
+        'large': ConvNetLarge
+    }
+
+    assert model_type in MODELS
+    return MODELS[model_type]
+
 def main():
 
+    args = get_arguments("infer")
+
+    data_dir = args.data_dir
+
     device = get_device()
-
-    data_dir = "./data/"
-
-    # TODO - Params for this
-
-    model_init_params = {}
-    trained_model = ConvNet(**model_init_params).to(device)
-    trained_model.load_state_dict(torch.load("./ConvNet_best_model.pth",map_location=torch.device(device))["model_dict"])
+    trained_model = get_model_class(args.model)(**args.model_parameters).to(device)
+    # Usual filepath is: "./ConvNet_best_model.pth"
+    trained_model.load_state_dict(torch.load(args.model_filepath,map_location=torch.device(device))["model_dict"])
     trained_model.eval()
 
     results = infer_raw(data_dir + "test.csv", trained_model)
