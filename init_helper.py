@@ -25,6 +25,7 @@ def get_parser(caller):
         parser.add_argument('--batch-size', type=int, default=128)
         parser.add_argument('--val-split-size', type=float, default=0.2)
         parser.add_argument('--lr', type=float, default=1e-3)
+        parser.add_argument('--limit', type=int, default=60000)
 
     elif caller == "infer":
 

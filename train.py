@@ -187,9 +187,11 @@ def main():
 
     X, Y = load_data(data_dir + "train.csv")
 
+    limit = min([args.limit,60000])
+
     trained_model = train(get_model_class(args.model),
                           args.model_parameters,
-                          X[:1000],Y[:1000],
+                          X[:limit],Y[:limit],
                           verbose=args.verbose,
                           num_epochs=args.max_epoch,
                           batch_size=args.batch_size,
