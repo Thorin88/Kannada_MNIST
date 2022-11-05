@@ -30,6 +30,6 @@ used, the models can still achieve decent results even when using a limit of 150
 
 3) Run the command `python infer.py basic`
 
-This should result in production of a `submission.csv` file in the root directory of the code base. Again, the
+This should result in production of a `outputs/submission.csv` file in the root directory of the code base. Again, the
 `-h` option can show you any options available for this command, but this default command will be enough to
 reproduce results.

@@ -83,7 +83,7 @@ def main():
     trained_model.eval()
 
     results = infer_raw(data_dir + "test.csv", trained_model)
-    results.to_csv("./submission.csv", index=False)
+    results.to_csv("./outputs/submission.csv", index=False)
 
 if __name__ == '__main__':
     main()
