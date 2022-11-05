@@ -20,6 +20,22 @@ from helpers import load_data, get_device, cuda, toTensor, toNumpy, plotResults,
 
 from CustomDataset import CustomDataset
 
+# Trains the provided model class using the data provided
+# Params:
+# - model_class: The model class to be trained. Note: this wants to be given CNN not CNN().
+# - model_init_params: A dictionary of parameters and their values to be passed to
+# the model class whenever it needs to be reinitialisd.
+# - X: The examples data to be split
+# - Y: The label data to be split
+# - valSplitSize: The size of the validation set, used to split X into training and
+# validation sets
+# - batch_size: batch size to train the model with
+# - num_epochs: The number of epochs to preform during each training phase.
+# - lr: The learning rate to use during training
+# - verbose: Controls the amount of output printed
+# Outputs:
+# - The model with the highest validation accuracy seen over the course of training. The
+# function also prints where a copy of the weights for this model have been saved to.
 def train(model_class,model_init_params,Xtr,Ytr,valSplitSize=0.2,batch_size=32,num_epochs=20,lr=1e-3,verbose=0):
 
     X, Y = None, None
@@ -121,6 +137,7 @@ def train(model_class,model_init_params,Xtr,Ytr,valSplitSize=0.2,batch_size=32,n
 
         print('Epoch [{}/{}]'.format(epoch+1, num_epochs))
 
+        # Aggregating the metrics collected during the batches for this epoch
         for phase in results_this_epoch.keys():
             for metric in results_this_epoch[phase].keys():
                 if metric == "loss":
@@ -135,7 +152,8 @@ def train(model_class,model_init_params,Xtr,Ytr,valSplitSize=0.2,batch_size=32,n
                 if (verbose > 0):
                     print('[{}] {}: {:.4f}'.format(phase, metric, results[phase][metric][-1]))
 
-        # Early stopping, preventing overfitting when using too many epochs
+        # Early stopping, prevents the model returned being overfit when using
+        # too many epochs
         if results["validation"]["accuracy"][-1] > lowestValidationAcc:
             lowestValidationAcc = results["validation"]["accuracy"][-1]
             if verbose > 0:

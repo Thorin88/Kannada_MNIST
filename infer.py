@@ -18,6 +18,15 @@ from helpers import load_data, get_device, cuda, toTensor, toNumpy, plotResults,
 
 from CustomDataset import CustomDataset
 
+# Using the trained model provided, loads in raw data from the filepath provided
+# and returns the model's predictions for this data.
+# Inputs:
+# - filename: The filepath to the data file
+# - model: A pretrained model
+# Outputs:
+# A dataframe who's first column is the id of the example, and second column is
+# the predicted label. The line 'output_df.to_csv("./submission.csv", index=False)'
+# will result in the correct output file being generated for the Kaggle competition.
 def infer_raw(filename, model):
 
     device = get_device()

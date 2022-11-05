@@ -13,14 +13,17 @@ from torchvision import transforms
 
 from helpers import toTensor
 
-# A dataset class that can be used by PyTorch data loaders
+# A dataset class that can be used by PyTorch data loaders.
+# Key properties:
+# - Only converts examples to tensors when requested by a data loader, avoiding
+# having the entire data converting to a tensor at one time.
+# - Allows augmentations to be applied to the dataset
 class CustomDataset(Dataset):
 
     def __init__(self, X, Y, num_classes=1, aug_transform=None):
 
         self.X = X
         # Convert labels to a tensor for training
-        # self.Y = nn.functional.one_hot(toTensor(Y).long(), num_classes=num_classes)
         self.Y = toTensor(Y).long()
 
         X, Y = None, None

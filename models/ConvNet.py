@@ -8,6 +8,7 @@ from torch.utils.data import DataLoader
 from torch.utils.data import Dataset
 from torchvision import transforms
 
+# A lighter weight CNN network, lower learning capacity but faster training times
 class ConvNet(nn.Module):
 
     def __init__(self, in_channels=1, num_classes=10):

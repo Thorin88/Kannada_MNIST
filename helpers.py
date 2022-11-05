@@ -11,6 +11,16 @@ from torchvision import transforms
 
 from torch.autograd import Variable
 
+# A function that loads in data from a CSV file. Expects the data to follow the
+# same format as train.csv if labels_present, otherwise expects the file format
+# to match that of test.csv.
+# Inputs:
+# - filename: The filepath to the data file
+# - labels_present: Whether the first column of the file is the ground truth or
+# IDs
+# Outputs:
+# - X: A numpy array with the data reshaped to 28x28 images and normalised.
+# - Y: A 1D numpy array of the first column of the file
 def load_data(filename, labels_present=True):
 
     data = pd.read_csv(filename)
@@ -25,6 +35,7 @@ def load_data(filename, labels_present=True):
 
         return X, Y
 
+    # Else is not strictly necessary, but keep separate for clarity
     else:
 
         X = data.iloc[:,1:].to_numpy().astype("float32").reshape(-1,28,28)/255.0
@@ -35,20 +46,25 @@ def load_data(filename, labels_present=True):
 
         return X, ids
 
+# A function to return a device to use, selecting cuda if it can.
 def get_device():
     if torch.cuda.is_available():
         return torch.device(f'cuda')
     else:
         return torch.device(f'cpu')
 
+# A function that can be used to ensure a tensor is able to be run on cuda, if
+# available.
 def cuda(v):
     if torch.cuda.is_available():
         return v.cuda()
     return v
 
+# A helper function to convert a numpy array, v, to a tensor
 def toTensor(v,dtype = torch.float,requires_grad = False):
     return cuda(Variable(torch.tensor(v)).type(dtype).requires_grad_(requires_grad))
 
+# A helper function to convert a tensor, v, to a numpy array
 def toNumpy(v):
     if torch.cuda.is_available():
         return v.detach().cpu().numpy()
@@ -77,6 +93,13 @@ def plotResults(trainingResults):
         plt.legend()
         plt.show()
 
+# Returns the number of correct predictions based on the provided predications
+# and ground truth
+# Params:
+# - preds: A tensor which was the raw output of running our model. (N,10)
+# - labels: The associated ground truth of the examples. (N,1)
+# Outputs:
+# - correct_count: The number of correct predictions
 def count_correct(preds, labels, debug=False):
 
     correct_count = 0.0
