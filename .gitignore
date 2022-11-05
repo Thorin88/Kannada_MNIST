@@ -1,2 +1,4 @@
 data/train.csv
 data/test.csv
+__pycache__/
+models/__pycache__/
